@@ -1,3 +1,5 @@
+#![feature(duration)]
+#![feature(wait_timeout)]
 extern crate gst;
 
 use gst::ElementT;
@@ -40,7 +42,7 @@ fn main(){
 			    gray %= 255;
 				appsrc.push_buffer(buffer);
 				let guard = mutex.lock().unwrap();
-				condvar.wait_timeout(guard,Duration::milliseconds((1000./60.) as i64)).ok();
+				condvar.wait_timeout(guard,Duration::from_millis((1000./60.) as u64)).ok();
 			}else{
 			    println!("Couldn't get buffer, sending EOS and finishing thread");
 			    appsrc.end_of_stream();
@@ -48,7 +50,7 @@ fn main(){
 			}
 		}
 	});
-	
+
 	for message in bus_receiver.iter(){
 		match message.parse(){
 			gst::Message::StateChangedParsed{ref msg, ref old, ref new, ref pending} => {
@@ -67,6 +69,6 @@ fn main(){
 			}
 		}
 	}
-	
+
 	mainloop.quit();
 }

@@ -4,14 +4,13 @@ use gst::ElementT;
 use gst::BinT;
 use std::env;
 use std::thread;
-use std::num::Float;
 use std::process::Command;
 
 
 fn main(){
-    gst::init();
-    let pipeline_str = "autoaudiosrc ! audioconvert ! appsink name=appsink0 caps=\"audio/x-raw,format=F32LE,channels=1\"";
-    let mut pipeline = gst::Pipeline::new_from_str(pipeline_str).unwrap();
+  gst::init();
+  let pipeline_str = "autoaudiosrc ! audioconvert ! appsink name=appsink0 caps=\"audio/x-raw,format=F32LE,channels=1\"";
+  let mut pipeline = gst::Pipeline::new_from_str(pipeline_str).unwrap();
 	let mut mainloop = gst::MainLoop::new();
 	let mut bus = pipeline.bus().expect("Couldn't get bus from pipeline");
 	let bus_receiver = bus.receiver();
@@ -49,7 +48,7 @@ fn main(){
 			}
 		}
 	});
-	
+
 	for message in bus_receiver.iter(){
 		match message.parse(){
 			gst::Message::StateChangedParsed{ref msg, ref old, ref new, ref pending} => {
